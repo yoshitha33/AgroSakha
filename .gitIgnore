@@ -1,0 +1,11 @@
+Frontend
+/build
+/node_modules
+/.env
+
+Backend
+/node_modules
+/.env
+/.env.local
+/.env.development
+/.env.test
