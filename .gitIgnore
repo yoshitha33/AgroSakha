@@ -1,0 +1,11 @@
+# Frontend
+Frontend/build
+Frontend/node_modules
+Frontend/.env
+
+# Backend
+Backend/node_modules
+Backend/.env
+Backend/.env.local
+Backend/.env.development
+Backend/.env.test
