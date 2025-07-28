@@ -1,11 +1,11 @@
-Frontend
-/build
-/node_modules
-/.env
+# Frontend
+Frontend/build
+Frontend/node_modules
+Frontend/.env
 
-Backend
-/node_modules
-/.env
-/.env.local
-/.env.development
-/.env.test
+# Backend
+Backend/node_modules
+Backend/.env
+Backend/.env.local
+Backend/.env.development
+Backend/.env.test
