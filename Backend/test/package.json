@@ -1,0 +1,12 @@
+{
+  "name": "test-backend-api",
+  "version": "1.0.0",
+  "description": "Test script for AgroSakha Backend API",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
