@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-const AddExpenseForm = ({ onAddExpense }) => {
+const AddExpenseForm = ({ onAddExpense = () => {} }) => {
   const [formData, setFormData] = useState({
     amount: "",
     category: "",
