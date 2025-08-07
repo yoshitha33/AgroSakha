@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Search, Filter, ChevronLeft, ChevronRight, Trash2 } from "lucide-react"
 
-const TransactionTable = ({ expenses, onDeleteExpense }) => {
+const TransactionTable = ({ expenses = [], onDeleteExpense }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
