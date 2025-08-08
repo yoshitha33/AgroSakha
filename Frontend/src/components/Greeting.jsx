@@ -1,6 +1,16 @@
 // src/components/Greeting.jsx
+import { useAuth } from '../contexts/AuthContext';
+
 const Greeting = () => {
-    const userName = "John Doe";
+    const { user } = useAuth();
+    
+    // Extract first name from full name
+    const getFirstName = (fullName) => {
+        if (!fullName) return 'Farmer';
+        return fullName.trim().split(' ')[0];
+    };
+    
+    const userName = getFirstName(user?.name);
     const weather = {
         temp: "24°C",
         condition: "Sunny",
@@ -11,7 +21,7 @@ const Greeting = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
             <div className="mb-4 md:mb-0">
                 <h1 className="text-2xl font-bold text-gray-800">
-                    Hello, {userName} 👋
+                    Hello, {userName} 
                 </h1>
                 <p className="text-gray-600">Welcome back to your farm dashboard</p>
             </div>

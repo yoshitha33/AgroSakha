@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import cors from "cors"
 import expenseRoutes from "./routes/Expenses.js"
 import budgetRoutes from "./routes/Budgets.js"
+import authRoutes from "./routes/Auth.js"
 import { requestLogger, errorHandler, notFoundHandler, corsOptions } from "./middleware/index.js"
 import config from "./config/index.js"
 
@@ -35,6 +36,7 @@ mongoose.connection.on("disconnected", () => {
 })
 
 // Routes
+app.use("/api/auth", authRoutes)
 app.use("/api/expenses", expenseRoutes)
 app.use("/api/budgets", budgetRoutes)
 
