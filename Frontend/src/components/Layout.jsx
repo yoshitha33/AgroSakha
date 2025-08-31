@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
@@ -19,25 +19,19 @@ export default function Layout({ children }) {
   }, [isSidebarOpen])
 
   return (
-    <div className="relative min-h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-gray-50">
+      <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
-
-      {/* Main content: Navbar + page content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        <Navbar
-          isSidebarOpen={isSidebarOpen}
-          toggleSidebar={toggleSidebar}
-        />
-        
-        {/* Page content */}
-        <main className="flex-1 overflow-auto">
-          {children}
-        </main>
-      </div>
+      
+      <main className={`transition-all duration-300 ease-in-out ${
+        isSidebarOpen ? 'lg:pl-80' : 'pl-0'
+      } pt-16`}>
+        {children}
+      </main>
     </div>
   )
 }
+

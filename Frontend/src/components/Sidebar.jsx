@@ -1,5 +1,8 @@
 import { X } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { TbBuildingStore } from "react-icons/tb";
+import { GiFertilizerBag } from "react-icons/gi";
+
 
 export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const navigate = useNavigate();
@@ -10,7 +13,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
     { name: "Weather", path: "/weather", icon: "🌤️" },
     { name: "Market Prices", path: "/market-prices", icon: "💰" },
     { name: "Expenses & Yield", path: "/expenses-yield", icon: "📊" },
-    { name: "Crop Planner & Fertilizer Advisor", path: "/crop-planner", icon: "🌱" },
+    { name: "Crop Recommendation", path: "/crop-recommendation", icon: "🌾" },
+    { name: "Fertiliser Planner" ,path: "/fertiliser-planner", icon: <GiFertilizerBag className="w-5 h-5" />, },
+    { name: "Nearby Shops", path: "/nearby-shops", icon: <TbBuildingStore /> },
     { name: "ChatBot", path: "/chatbot", icon: "🤖" },
     { name: "Govt Schemes & Documents", path: "/govt-schemes", icon: "📋" },
     { name: "Alerts", path: "/alerts", icon: "🚨" },
@@ -31,7 +36,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
       {/* Dark overlay for all screen sizes */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          className="fixed inset-0  bg-opacity-20 z-20"
           onClick={toggleSidebar}
         />
       )}

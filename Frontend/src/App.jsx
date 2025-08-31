@@ -13,7 +13,7 @@ import Dashboard from './pages/Dashboard'
 import Weather from './pages/Weather'
 import MarketPricesPage from './pages/MarketPrices'
 import ExpensesYield from './pages/ExpensesYield'
-import CropPlannerFertilizer from './pages/CropPlannerFertilizer'
+import FertilizerRecommendation from './pages/FertilizerRecommendation'
 import ChatBot from './pages/ChatBot'
 import GovtSchemesDocuments from './pages/GovtSchemesDocuments'
 import Alerts from './pages/Alerts'
@@ -21,6 +21,8 @@ import Settings from './pages/Settings'
 import AdminPanel from './pages/AdminPanel'
 import PestDetection from './pages/PestDetection'
 import ExpenseTracker from './pages/ExpenseTracker'
+import NearbyShops from './pages/NearbyShops'
+import CropRecommendation from './pages/CropRecommendation'
 
 export default function App() {
   return (
@@ -66,10 +68,20 @@ export default function App() {
             } 
           />
           <Route 
-            path="/crop-planner" 
+            path="/fertiliser-planner" 
             element={
               <ProtectedRoute>
-                <CropPlannerFertilizer />
+                <FertilizerRecommendation />
+              </ProtectedRoute>
+            } 
+          />
+
+           
+          <Route 
+            path="/nearby-shops" 
+            element={
+              <ProtectedRoute>
+                <NearbyShops />
               </ProtectedRoute>
             } 
           />
@@ -126,6 +138,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ExpenseTracker />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/crop-recommendation" 
+            element={
+              <ProtectedRoute>
+                <CropRecommendation />
               </ProtectedRoute>
             } 
           />
