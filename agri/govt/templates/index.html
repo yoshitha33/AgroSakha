@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Agriculture Schemes Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary: #FFA000;
+            --secondary-light: #FFC107;
+            --secondary-dark: #FF8F00;
+            --accent: #0288D1;
+            --accent-light: #03A9F4;
+            --accent-dark: #01579B;
+            --government: #1565C0;
+            --private: #7B1FA2;
+            --text: #212121;
+            --text-light: #757575;
+            --text-lighter: #BDBDBD;
+            --background: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --error: #D32F2F;
+            --success: #388E3C;
+            --warning: #F57C00;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        header .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Controls Section */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            flex-grow: 1;
+            max-width: 600px;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .search-box:focus-within {
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-box button {
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        select, .refresh-btn {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        select:focus, .refresh-btn:focus {
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .refresh-btn {
+            background-color: var(--secondary-light);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            background-color: var(--secondary-dark);
+            color: white;
+        }
+
+        /* Schemes Container */
+        .schemes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Scheme Card */
+        .scheme-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .scheme-card-header {
+            padding: 1.2rem 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scheme-card.government .scheme-card-header {
+            background: linear-gradient(135deg, var(--government), #1976D2);
+        }
+
+        .scheme-card.private .scheme-card-header {
+            background: linear-gradient(135deg, var(--private), #9C27B0);
+        }
+
+        .scheme-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background-color: white;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .scheme-card-header-text {
+            flex-grow: 1;
+        }
+
+        .scheme-card-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .scheme-type {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scheme-card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .scheme-card-body p {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .scheme-detail {
+            margin: 1rem 0;
+        }
+
+        .scheme-detail-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scheme-detail-content {
+            background-color: rgba(0,0,0,0.03);
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        .scheme-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: rgba(0,0,0,0.02);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .scheme-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .scheme-link:hover {
+            color: var(--accent-dark);
+        }
+
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Loading States */
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-light);
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty and Error States */
+        .empty-state, .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .empty-state i, .error-state i {
+            font-size: 3rem;
+            color: var(--text-lighter);
+        }
+
+        .error-state i {
+            color: var(--error);
+        }
+
+        .empty-state h3, .error-state h3 {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .empty-state p, .error-state p {
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            color: white;
+            transform: translateX(200%);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--error);
+        }
+
+        .notification.warning {
+            background-color: var(--warning);
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        footer .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            max-width: 800px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-link {
+            color: white;
+            opacity: 0.8;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .schemes-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-options {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            select, .refresh-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .schemes-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scheme-card {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .scheme-card:nth-child(1) { animation-delay: 0.1s; }
+        .scheme-card:nth-child(2) { animation-delay: 0.2s; }
+        .scheme-card:nth-child(3) { animation-delay: 0.3s; }
+        .scheme-card:nth-child(4) { animation-delay: 0.4s; }
+        .scheme-card:nth-child(5) { animation-delay: 0.5s; }
+        .scheme-card:nth-child(6) { animation-delay: 0.6s; }
+        .scheme-card:nth-child(7) { animation-delay: 0.7s; }
+        .scheme-card:nth-child(8) { animation-delay: 0.8s; }
+        .scheme-card:nth-child(9) { animation-delay: 0.9s; }
+        .scheme-card:nth-child(10) { animation-delay: 1.0s; }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+
+    <header>
+        <div class="container">
+            <h1>Comprehensive Agriculture Schemes Portal</h1>
+            <p>Discover all government and private sector schemes to support farmers and agricultural development</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search schemes by name, benefits or eligibility...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label for="filterCategory">Category:</label>
+                    <select id="filterCategory">
+                        <option value="all">All Categories</option>
+                        <option value="financial">Financial Support</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="training">Training & Education</option>
+                        <option value="support">Farmer Support</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterType">Type:</label>
+                    <select id="filterType">
+                        <option value="all">All Types</option>
+                        <option value="government">Government Schemes</option>
+                        <option value="private">Private Schemes</option>
+                    </select>
+                </div>
+                <button class="refresh-btn" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+            </div>
+        </section>
+
+        <section class="schemes-container" id="schemesContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading agriculture schemes...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>This portal aggregates agriculture schemes from various government and private sector sources to help farmers access available support programs.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Use</a>
+            </div>
+            <p>&copy; 2023 Agriculture Schemes Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const schemesContainer = document.getElementById('schemesContainer');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const filterCategory = document.getElementById('filterCategory');
+            const filterType = document.getElementById('filterType');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const notification = document.getElementById('notification');
+            
+            let allSchemes = [];
+            
+            // Show notification
+            function showNotification(message, type = 'success') {
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                notification.className = `notification show ${type}`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+            
+            // Fetch schemes from backend API
+            async function fetchSchemes() {
+                try {
+                    schemesContainer.innerHTML = `
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading agriculture schemes...</p>
+                        </div>
+                    `;
+                    
+                    const response = await fetch('/api/schemes');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allSchemes = await response.json();
+                    displaySchemes(allSchemes);
+                    
+                    if (allSchemes.length === 0) {
+                        showNotification('No schemes found. The server may be down or scraping failed.', 'warning');
+                    } else {
+                        showNotification(`Successfully loaded ${allSchemes.length} schemes`, 'success');
+                    }
+                } catch (error) {
+                    console.error('Error fetching schemes:', error);
+                    schemesContainer.innerHTML = `
+                        <div class="error-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h3>Failed to Load Schemes</h3>
+                            <p>We encountered an error while trying to load the schemes. Please try again later.</p>
+                            <p><small>Error: ${error.message}</small></p>
+                        </div>
+                    `;
+                    showNotification('Failed to load schemes. See console for details.', 'error');
+                }
+            }
+            
+            // Refresh schemes by forcing rescrape
+            async function refreshSchemes() {
+                try {
+                    schemesContainer.innerHTML = `
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Refreshing scheme data...</p>
+                        </div>
+                    `;
+                    
+                    const response = await fetch('/api/refresh');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    // After refresh, fetch the updated schemes
+                    await fetchSchemes();
+                    showNotification(`Schemes refreshed. ${data.count} schemes available.`, 'success');
+                } catch (error) {
+                    console.error('Error refreshing schemes:', error);
+                    showNotification('Failed to refresh schemes. See console for details.', 'error');
+                }
+            }
+            
+            // Display schemes in the UI
+            function displaySchemes(schemes) {
+                if (schemes.length === 0) {
+                    schemesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-info-circle"></i>
+                            <h3>No Schemes Found</h3>
+                            <p>There are no schemes matching your current filters. Try adjusting your search criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                schemesContainer.innerHTML = schemes.map(scheme => `
+                    <div class="scheme-card ${scheme.type}">
+                        <div class="scheme-card-header">
+                            ${scheme.logo ? `<img src="${scheme.logo}" alt="${scheme.title} logo" class="scheme-logo">` : ''}
+                            <div class="scheme-card-header-text">
+                                <h3>${scheme.title}</h3>
+                                <div class="scheme-type">${scheme.type === 'government' ? 'Government Scheme' : 'Private Sector Scheme'}</div>
+                            </div>
+                        </div>
+                        <div class="scheme-card-body">
+                            <p>${scheme.description}</p>
+                            
+                            <div class="scheme-detail">
+                                <div class="scheme-detail-title">
+                                    <i class="fas fa-user-check"></i>
+                                    <span>Eligibility</span>
+                                </div>
+                                <div class="scheme-detail-content">${scheme.eligibility}</div>
+                            </div>
+                            
+                            <div class="scheme-detail">
+                                <div class="scheme-detail-title">
+                                    <i class="fas fa-gift"></i>
+                                    <span>Benefits</span>
+                                </div>
+                                <div class="scheme-detail-content">${scheme.benefits}</div>
+                            </div>
+                        </div>
+                        <div class="scheme-card-footer">
+                            <a href="${scheme.link}" target="_blank" class="scheme-link">
+                                <i class="fas fa-external-link-alt"></i> Visit Official Site
+                            </a>
+                            <span class="last-updated">Updated: ${scheme.last_updated || 'N/A'}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Filter schemes based on search and filters
+            function filterSchemes() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const categoryValue = filterCategory.value;
+                const typeValue = filterType.value;
+                
+                let filtered = allSchemes;
+                
+                // Apply search filter
+                if (searchTerm) {
+                    filtered = filtered.filter(scheme => 
+                        scheme.title.toLowerCase().includes(searchTerm) || 
+                        scheme.description.toLowerCase().includes(searchTerm) ||
+                        scheme.eligibility.toLowerCase().includes(searchTerm) ||
+                        scheme.benefits.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                // Apply category filter
+                if (categoryValue !== 'all') {
+                    filtered = filtered.filter(scheme => 
+                        scheme.category === categoryValue
+                    );
+                }
+                
+                // Apply type filter
+                if (typeValue !== 'all') {
+                    filtered = filtered.filter(scheme => 
+                        scheme.type === typeValue
+                    );
+                }
+                
+                displaySchemes(filtered);
+            }
+            
+            // Event listeners
+            searchBtn.addEventListener('click', filterSchemes);
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    filterSchemes();
+                }
+            });
+            filterCategory.addEventListener('change', filterSchemes);
+            filterType.addEventListener('change', filterSchemes);
+            refreshBtn.addEventListener('click', refreshSchemes);
+            
+            // Initial fetch
+            fetchSchemes();
+        });
+    </script>
+</body>
+</html>
