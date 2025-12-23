@@ -1,6 +1,6 @@
 // src/utils/api.js
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
 
 console.log('API Base URL:', API_BASE_URL); // Debug log
 

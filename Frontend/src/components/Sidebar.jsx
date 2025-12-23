@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { X, Bug } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { TbBuildingStore } from "react-icons/tb";
 import { GiFertilizerBag } from "react-icons/gi";
@@ -15,6 +15,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
     { name: "Expenses & Yield", path: "/expenses-yield", icon: "📊" },
     { name: "Crop Recommendation", path: "/crop-recommendation", icon: "🌾" },
     { name: "Fertiliser Planner" ,path: "/fertiliser-planner", icon: <GiFertilizerBag className="w-5 h-5" />, },
+    { name: "Pest Detection", path: "/pest-detection", icon: <Bug className="w-5 h-5" /> },
     { name: "Nearby Shops", path: "/nearby-shops", icon: <TbBuildingStore /> },
     { name: "ChatBot", path: "/chatbot", icon: "🤖" },
     { name: "Govt Schemes & Documents", path: "/govt-schemes", icon: "📋" },

@@ -4,7 +4,7 @@ dotenv.config()
 
 export const config = {
   // Server
-  PORT: process.env.PORT || 5000,
+  PORT: process.env.PORT || 5001,
   NODE_ENV: process.env.NODE_ENV || 'development',
   
   // Database
@@ -24,9 +24,15 @@ export const config = {
   JWT_SECRET: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '24h',
   
+  // Google Maps API
+  GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY || 'AIzaSyAIvOQ5TMxm9IdWuZeipj4OyASsOyiKLTo',
+  
   // Features
   ENABLE_LOGGING: process.env.ENABLE_LOGGING !== 'false',
-  ENABLE_CORS: process.env.ENABLE_CORS !== 'false'
+  ENABLE_CORS: process.env.ENABLE_CORS !== 'false',
+
+  // External APIs
+  OPENWEATHER_API_KEY: process.env.OPENWEATHER_API_KEY || ''
 }
 
 // Validate required environment variables
@@ -34,6 +40,8 @@ const requiredEnvVars = ['MONGODB_URI']
 
 if (config.NODE_ENV === 'production') {
   requiredEnvVars.push('JWT_SECRET')
+  // In production, require weather API key for real data
+  requiredEnvVars.push('OPENWEATHER_API_KEY')
 }
 
 for (const envVar of requiredEnvVars) {

@@ -20,15 +20,39 @@ export default function CropRecommendation() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
+  // Sample data for testing
+  const sampleData = {
+    nitrogen: 90,
+    phosphorus: 42,
+    potassium: 43,
+    pH: 6.5,
+    rainfall: 202.9,
+    temperature: 20.8,
+    humidity: 82.0,
+    soilType: 'loamy',
+    season: 'Kharif',
+    location: 'Andhra Pradesh',
+    area: '5'
+  };
+
+  const loadSampleData = () => {
+    setFormData(sampleData);
+    setError(null);
+    setResult(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setResult(null);
     try {
       const response = await getCropRecommendation(formData);
+      console.log('Crop recommendation response:', response);
       setResult(response);
     } catch (err) {
-      setError(err.message || 'Failed to get recommendation');
+      console.error('Crop recommendation error:', err);
+      setError(typeof err === 'string' ? err : err.message || 'Failed to get recommendation');
     } finally {
       setLoading(false);
     }
@@ -83,6 +107,21 @@ export default function CropRecommendation() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Sample Data Loading */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-blue-900">New to this tool?</p>
+                <p className="text-xs text-blue-700">Load sample data to see how crop recommendations work</p>
+              </div>
+              <button
+                type="button"
+                onClick={loadSampleData}
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Load Sample Data
+              </button>
+            </div>
+
             {/* Basic Information Section */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100">
               <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">

@@ -1,29 +1,18 @@
 import {
-  Home,
-  Bug,
-  Cloud,
-  DollarSign,
-  HelpCircle,
-  Building,
   Upload,
   Leaf,
   Eye,
-  ChevronRight,
   Camera,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Info,
 } from 'lucide-react'
 import Layout from '../components/Layout'
 import { useState, useRef } from 'react'
+import { detectPest } from '../services/pestService'
 
 export default function PestDetection() {
-  // Sidebar data for this page
-  const sidebarItems = [
-    { icon: Home, label: 'Dashboard', active: true },
-    { icon: Bug, label: 'Pest Detection', active: true },
-    { icon: Cloud, label: 'Weather', active: false },
-    { icon: DollarSign, label: 'Market Prices', active: false },
-    { icon: HelpCircle, label: 'Expert Helpline', active: false },
-    { icon: Building, label: 'Government Schemes', active: false },
-  ]
 
   // Data arrays
   const recentDetections = [
@@ -80,6 +69,9 @@ export default function PestDetection() {
   // Upload state & handlers
   const [selectedImage, setSelectedImage] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
+  const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -87,6 +79,8 @@ export default function PestDetection() {
     if (file) {
       setSelectedImage(file)
       setPreviewUrl(URL.createObjectURL(file))
+      setResult(null)
+      setError(null)
     }
   }
 
@@ -94,133 +88,255 @@ export default function PestDetection() {
     fileInputRef.current.click()
   }
 
+  const analyzeImage = async () => {
+    if (!selectedImage) return
+    setLoading(true)
+    setError(null)
+    setResult(null)
+    try {
+      const toBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+      const base64 = await toBase64(selectedImage)
+      console.log('Sending image for pest detection...');
+      const res = await detectPest(base64)
+      console.log('Pest detection response:', res);
+      setResult(res)
+    } catch (err) {
+      console.error('Pest detection error:', err);
+      setError(typeof err === 'string' ? err : err.error || err.message || 'Failed to detect pest')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <Layout pageTitle="Pest Detection" sidebarItems={sidebarItems}>
-      {/* Upload Section */}
-      <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12 text-center mb-8">
-        <Camera className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Drag & drop your image here or click to upload
-        </h3>
-        <p className="text-gray-500 mb-6">
-          Supporting: jpg, jpeg, png, webp, tiff
-        </p>
-
-        {previewUrl && (
-          <div className="mb-4">
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="mx-auto rounded-lg h-40 object-contain"
-            />
+    <Layout>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600">
+                🐛 Plant Disease Detection
+              </span>
+            </h1>
+            <p className="text-gray-600">
+              Upload a photo of your plant leaf to detect diseases using AI-powered analysis
+            </p>
           </div>
-        )}
 
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
+          {/* Info Banner */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-blue-800">
+              <p className="font-medium mb-1">How it works:</p>
+              <p>Our AI model analyzes leaf images to identify common plant diseases. For best results, take clear photos in good lighting with the leaf filling most of the frame.</p>
+            </div>
+          </div>
 
-        <button
-          onClick={handleUploadClick}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-          type="button"
-        >
-          Upload Image
-        </button>
-      </div>
+          {/* Main Upload Section */}
+          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-green-500 transition-colors">
+              <Camera className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              
+              {previewUrl ? (
+                <div className="mb-6">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="mx-auto rounded-lg max-h-64 object-contain border border-gray-200 shadow-md"
+                  />
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Upload Plant Leaf Image
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Drag & drop or click to select • Supports: JPG, PNG, WEBP
+                  </p>
+                </>
+              )}
 
-      {/* Recent Detections */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          Recent Detections
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {recentDetections.map((detection) => (
-            <div
-              key={detection.id}
-              className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-            >
-              <img
-                src={detection.image}
-                alt={detection.title}
-                className="w-full h-40 object-cover"
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
               />
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-1">
-                  {detection.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">{detection.subtitle}</p>
-                <p className="text-xs text-gray-500">{detection.time}</p>
+
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={handleUploadClick}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
+                  type="button"
+                >
+                  <Upload className="w-5 h-5" />
+                  {previewUrl ? 'Change Image' : 'Choose Image'}
+                </button>
+                
+                {previewUrl && (
+                  <button
+                    onClick={analyzeImage}
+                    disabled={loading}
+                    className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                      loading
+                        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                        : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    }`}
+                    type="button"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader className="w-5 h-5 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-5 h-5" />
+                        Analyze Image
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Action Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {actionCards.map((card, idx) => {
-          const Icon = card.icon
-          return (
-            <div key={idx} className={`${card.bgColor} rounded-lg p-6`}>
-              <Icon className={`w-8 h-8 ${card.iconColor} mb-4`} />
-              <h3 className="font-semibold text-gray-900 mb-2">{card.title}</h3>
-              <p className="text-sm text-gray-600">{card.subtitle}</p>
-            </div>
-          )
-        })}
-      </section>
-
-      {/* Best Practices Section */}
-      <section className="bg-white rounded-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Best Practices for Photo Capture
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
-            <div>
-              <h4 className="font-medium text-gray-900">
-                Focus good lighting conditions
-              </h4>
-              <p className="text-sm text-gray-600">
-                View the captured clearly for best results
-              </p>
-            </div>
           </div>
-          <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
-            <div>
-              <h4 className="font-medium text-gray-900">
-                Take photos from multiple angles
-              </h4>
-              <p className="text-sm text-gray-600">
-                Multiple perspectives improve accuracy
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Need Assistance Section */}
-      <section className="bg-white rounded-lg p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Need Assistance?
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-red-800">Error</p>
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Result Display */}
+          {result && !error && (
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-green-500">
+              <div className="flex items-start gap-3 mb-4">
+                <CheckCircle className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-1">Detection Complete</h3>
+                  <p className="text-sm text-gray-600">Analysis results from AI model</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                  <p className="text-sm text-gray-600 mb-1">Disease Detected</p>
+                  <p className="text-lg font-semibold text-gray-900">{result.label || 'Unknown'}</p>
+                </div>
+                
+                {typeof result.confidence === 'number' && (
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200">
+                    <p className="text-sm text-gray-600 mb-1">Confidence Level</p>
+                    <div className="flex items-baseline gap-1">
+                      <p className="text-lg font-semibold text-gray-900">{result.confidence.toFixed(2)}%</p>
+                      <div className="flex-1 ml-2">
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+                            style={{ width: `${Math.min(result.confidence, 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
+                  <p className="text-sm text-gray-600 mb-1">Image Type</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {result.isLeaf ? '✓ Leaf Image' : '✗ Not a Leaf'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Recommendations */}
+              {result.label && result.label.toLowerCase().includes('healthy') === false && (
+                <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-yellow-900 mb-2">💡 Recommendations</h4>
+                  <ul className="text-sm text-yellow-800 space-y-1">
+                    <li>• Consult with an agricultural expert for treatment options</li>
+                    <li>• Remove and destroy affected leaves to prevent spread</li>
+                    <li>• Monitor other plants for similar symptoms</li>
+                    <li>• Consider appropriate fungicides or pesticides if confirmed</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* How to Use Guide */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {actionCards.map((card, idx) => {
+              const Icon = card.icon
+              return (
+                <div key={idx} className={`${card.bgColor} rounded-xl p-6 border border-gray-200`}>
+                  <Icon className={`w-10 h-10 ${card.iconColor} mb-4`} />
+                  <h3 className="font-semibold text-gray-900 mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-600">{card.subtitle}</p>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Best Practices */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Leaf className="w-6 h-6 text-green-600" />
+              Best Practices for Accurate Detection
             </h2>
-            <p className="text-gray-600">Our support team is here to help you</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-gray-900">Good Lighting</h4>
+                  <p className="text-sm text-gray-600">
+                    Take photos in natural daylight for clearest visibility of symptoms
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-gray-900">Clear Focus</h4>
+                  <p className="text-sm text-gray-600">
+                    Ensure the leaf fills most of the frame and is in sharp focus
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-gray-900">Single Leaf</h4>
+                  <p className="text-sm text-gray-600">
+                    Photograph individual leaves showing symptoms clearly
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-gray-900">Multiple Angles</h4>
+                  <p className="text-sm text-gray-600">
+                    Take photos from different angles for better analysis
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <button className="flex items-center text-green-600 hover:text-green-700 font-medium">
-            Contact Support
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </button>
         </div>
-      </section>
+      </div>
     </Layout>
   )
 }

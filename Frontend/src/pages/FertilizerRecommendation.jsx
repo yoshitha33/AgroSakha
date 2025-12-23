@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FlaskConical, SproutIcon, Package } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import { getFertilizerRecommendation } from "../services/fertilizerService";
 
 const soilTypes = ["Sandy", "Clay", "Silty", "Peaty", "Chalky", "Loamy"];
 const cropTypes = [
@@ -69,10 +70,35 @@ const FertilizerRecommendation = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Replace with backend API call
-    setRecommendation(exampleRecommendation);
+    setLoading(true);
+    setError(null);
+    setRecommendation(null);
+    try {
+      const payload = {
+        temperature: form.temperature,
+        humidity: form.humidity,
+        moisture: form.moisture,
+        soilType: form.soilType,
+        cropType: form.cropType,
+        nitrogen: form.nitrogen,
+        potassium: form.potassium,
+        phosphorous: form.phosphorous,
+      };
+      console.log('Fertilizer request payload:', payload);
+      const res = await getFertilizerRecommendation(payload);
+      console.log('Fertilizer recommendation response:', res);
+      setRecommendation(res);
+    } catch (err) {
+      console.error('Fertilizer recommendation error:', err);
+      setError(typeof err === 'string' ? err : err.error || err.message || 'Failed to get recommendation');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -218,9 +244,10 @@ const FertilizerRecommendation = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full mt-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl shadow-md hover:from-green-700 hover:to-green-800 transition-all duration-200"
+                  disabled={loading}
+                  className={`w-full mt-4 py-3 text-white font-semibold rounded-xl shadow-md transition-all duration-200 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'}`}
                 >
-                  Get Recommendation
+                  {loading ? 'Processing...' : 'Get Recommendation'}
                 </button>
               </form>
             </div>
@@ -243,7 +270,10 @@ const FertilizerRecommendation = () => {
                 ))}
               </div>
               {/* Recommendation Cards */}
-              {recommendation && (
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700">{error}</div>
+              )}
+              {recommendation && recommendation.fertilizer && (
                 <>
                   <div className="bg-green-50 border border-green-200 rounded-2xl shadow-lg p-6">
                     <h3 className="text-2xl font-bold text-green-800 mb-2">
@@ -252,15 +282,15 @@ const FertilizerRecommendation = () => {
                     <div className="text-lg font-semibold text-green-700 mb-2">
                       {recommendation.fertilizer}
                     </div>
-                    <p className="text-gray-700 mb-4">
-                      {recommendation.details}
-                    </p>
+                    {recommendation.details && (
+                      <p className="text-gray-700 mb-4">{recommendation.details}</p>
+                    )}
                     <div>
                       <h4 className="font-semibold text-green-700 mb-1">
                         Tips:
                       </h4>
                       <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {recommendation.tips.map((tip, idx) => (
+                        {(recommendation.tips || exampleRecommendation.tips).map((tip, idx) => (
                           <li key={idx}>{tip}</li>
                         ))}
                       </ul>
@@ -270,7 +300,7 @@ const FertilizerRecommendation = () => {
                     <h4 className="font-semibold text-blue-700 mb-1">
                       Next Steps
                     </h4>
-                    <p className="text-gray-700">{recommendation.nextSteps}</p>
+                    <p className="text-gray-700">{recommendation.nextSteps || exampleRecommendation.nextSteps}</p>
                   </div>
                   <div className="bg-yellow-50 border border-yellow-200 rounded-2xl shadow p-4">
                     <h4 className="font-semibold text-yellow-700 mb-1">
