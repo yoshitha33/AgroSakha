@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#8b5cf6", "#6b7280"]
 
-const ExpenseChart = ({ expenses }) => {
+const ExpenseChart = ({ expenses = [] }) => {
   const [chartType, setChartType] = useState("category")
 
   // Prepare category distribution data with better handling

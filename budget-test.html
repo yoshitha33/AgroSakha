@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearby Pest Control Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pap5B8z0wYzHL6mQ8v2VfF1++rYJ8uf7AaYu9GuRPNIkSlXWbsKzMjUR9kQyFqjYk2cc6MBWgW9F4tFQ7F86Wg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #00796b;
+    }
+
+    button {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    #loadingIndicator {
+      margin: 10px;
+      color: #00796b;
+    }
+
+    .shop-card {
+      background-color: #f1f8e9;
+      padding: 16px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header i {
+      font-size: 20px;
+      color: #388e3c;
+    }
+
+    .shop-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .shop-address {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .stars i {
+      color: #fbc02d;
+    }
+
+    .actions {
+      margin-top: 10px;
+    }
+
+    .action-btn {
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-right: 10px;
+      font-size: 14px;
+      display: inline-block;
+    }
+
+    .directions {
+      background-color: #4db6ac;
+      color: white;
+    }
+
+    .call {
+      background-color: #81c784;
+      color: white;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    #noResults {
+      display: none;
+      color: #d32f2f;
+      font-weight: 500;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .shop-card {
+        font-size: 14px;
+      }
+
+      .card-header h3 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Nearby Pest Control Services</h2>
+    <button onclick="getLocation()">Find Pest Shops Near Me</button>
+    <div id="loadingIndicator" style="display: none;">🔍 Locating and fetching results...</div>
+    <div id="resultsContainer">
+      <ul id="shopList"></ul>
+    </div>
+    <div id="noResults">No pest control services found nearby.</div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+    function getLocation() {
+      document.getElementById('loadingIndicator').style.display = 'block';
+      document.getElementById('shopList').innerHTML = '';
+      document.getElementById('noResults').style.display = 'none';
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+        document.getElementById('loadingIndicator').style.display = 'none';
+      }
+    }
+
+    function sendLocation(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      fetch('http://127.0.0.1:5000/nearby-pest-shops', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ lat, lng })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        const list = document.getElementById("shopList");
+        list.innerHTML = "";
+
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach(place => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <div class="shop-card">
+                <div class="card-header">
+                  <i class="fas fa-building"></i>
+                  <h3>${place.name}</h3>
+                </div>
+                <div class="card-body">
+                  <div class="shop-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    ${place.vicinity || place.formatted_address || 'Address not available'}
+                  </div>
+                  <div class="rating">
+                    <div class="stars">
+                      ${generateStars(place.rating || 4)}
+                    </div>
+                    <span>${place.rating || "4.0"} (${place.user_ratings_total || 'N/A'} reviews)</span>
+                  </div>
+                  <p>Certified pest control services for home & business.</p>
+                  <div class="actions">
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + (place.vicinity || ''))}" target="_blank" class="action-btn directions">
+                      <i class="fas fa-route"></i> Directions
+                    </a>
+                    ${place.formatted_phone_number ? `
+                      <a href="tel:${place.formatted_phone_number}" class="action-btn call">
+                        <i class="fas fa-phone"></i> Call Now
+                      </a>` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+            list.appendChild(li);
+          });
+        } else {
+          document.getElementById('noResults').style.display = 'block';
+        }
+      })
+      .catch(err => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        console.error(err);
+        alert("Failed to fetch pest shops.");
+      });
+    }
+
+    function generateStars(rating) {
+      let stars = '';
+      const full = Math.floor(rating);
+      const half = rating % 1 >= 0.5;
+      for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
+      if (half) stars += '<i class="fas fa-star-half-alt"></i>';
+      for (let i = 0; i < 5 - full - (half ? 1 : 0); i++) stars += '<i class="far fa-star"></i>';
+      return stars;
+    }
+
+    function showError(err) {
+      document.getElementById('loadingIndicator').style.display = 'none';
+      alert("Location error: " + err.message);
+    }
+  </script>
+
+</body>
+</html>

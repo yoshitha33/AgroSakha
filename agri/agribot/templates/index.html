@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agribot Chat</title>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .input-group {
+      display: flex;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .user, .bot {
+      margin: 5px 0;
+    }
+
+    .user {
+      text-align: right;
+      color: green;
+    }
+
+    .bot {
+      text-align: left;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Agribot Chat (Groq)</h1>
+    <p style="margin-top:-10px;color:#666;font-size:14px">Running on port set by PORT env (default 5001)</p>
+    <p id="status" style="margin:8px 0 16px;color:#444;font-size:14px">Checking API key...</p>
+    <div class="chat-box" id="chat-box"></div>
+    <div class="input-group">
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Show health status (API key presence)
+    fetch('/health')
+      .then(r => r.json())
+      .then(h => {
+        const status = document.getElementById('status');
+        if (h.hasKey) {
+          status.textContent = 'Status: API key detected. Chat ready.';
+          status.style.color = '#0a7d00';
+        } else {
+          status.textContent = 'Status: GROQ_API_KEY missing. Set the environment variable to enable chat.';
+          status.style.color = '#b00020';
+        }
+      })
+      .catch(() => {
+        const status = document.getElementById('status');
+        status.textContent = 'Status: Unable to reach server health endpoint.';
+        status.style.color = '#b00020';
+      });
+
+    function sendMessage() {
+      const userInput = document.getElementById("user-input");
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage("user", message);
+      userInput.value = "";
+
+      fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: message })
+      })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const msg = data.error || data.message || 'Server error';
+          appendMessage('bot', 'Error: ' + msg);
+          return;
+        }
+        appendMessage('bot', data.response || '(no response)');
+      })
+      .catch(() => {
+        appendMessage('bot', 'Error connecting to server.');
+      });
+    }
+
+    function appendMessage(sender, message) {
+      const chatBox = document.getElementById("chat-box");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = sender;
+      messageDiv.textContent = message;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>

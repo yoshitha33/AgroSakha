@@ -3,6 +3,10 @@ import mongoose from "mongoose"
 import cors from "cors"
 import expenseRoutes from "./routes/Expenses.js"
 import budgetRoutes from "./routes/Budgets.js"
+import authRoutes from "./routes/Auth.js"
+import mlRoutes from "./routes/ML.js"
+import weatherRoutes from "./routes/Weather.js"
+import shopsRoutes from "./routes/Shops.js"
 import { requestLogger, errorHandler, notFoundHandler, corsOptions } from "./middleware/index.js"
 import config from "./config/index.js"
 
@@ -12,6 +16,12 @@ const app = express()
 app.use(cors(corsOptions))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`[REQUEST] ${req.method} ${req.path}`)
+  next()
+})
 
 // Request logging
 if (config.ENABLE_LOGGING) {
@@ -35,8 +45,12 @@ mongoose.connection.on("disconnected", () => {
 })
 
 // Routes
+app.use("/api/auth", authRoutes)
 app.use("/api/expenses", expenseRoutes)
 app.use("/api/budgets", budgetRoutes)
+app.use("/api", mlRoutes)
+app.use("/api", weatherRoutes)
+app.use("/api", shopsRoutes)
 
 // Health check route
 app.get("/api/health", (req, res) => {
@@ -58,7 +72,16 @@ app.get("/", (req, res) => {
       expenses: "/api/expenses",
       stats: "/api/expenses/stats",
       budgets: "/api/budgets",
-      currentBudget: "/api/budgets/current"
+      currentBudget: "/api/budgets/current",
+      marketPrices: "/api/market-prices",
+      cropRecommendation: "/api/crop-recommendation",
+      fertilizerRecommendation: "/api/fertilizer-recommendation",
+      pestDetection: "/api/pest-detection",
+      currentWeather: "/api/current-weather",
+      weatherForecast: "/api/forecast",
+      weatherAlerts: "/api/alerts",
+      nearbyShops: "/api/nearby-shops",
+      nearbyPestControl: "/api/nearby-pest-control"
     }
   })
 })

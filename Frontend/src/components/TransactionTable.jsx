@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Search, Filter, ChevronLeft, ChevronRight, Trash2 } from "lucide-react"
 
-const TransactionTable = ({ expenses, onDeleteExpense }) => {
+const TransactionTable = ({ expenses = [], onDeleteExpense }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
@@ -82,8 +82,9 @@ const TransactionTable = ({ expenses, onDeleteExpense }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedExpenses.map((expense) => (
-              <tr key={expense._id} className="hover:bg-gray-50">
+            {paginatedExpenses.map((expense, idx) => (
+              <tr key={expense._id || expense.id || `${idx}-${expense.date}`}
+                  className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {new Date(expense.date).toLocaleDateString("en-US", {
                     month: "short",

@@ -1,0 +1,209 @@
+```
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    PEST DETECTION - COMPLETE INTEGRATION                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              SIDEBAR NAVIGATION                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  🏠  Home (Dashboard)                                                       │
+│  🌤️  Weather                                                                │
+│  💰  Market Prices                                                          │
+│  📊  Expenses & Yield                                                       │
+│  🌾  Crop Recommendation                                                    │
+│  🧪  Fertiliser Planner                                                     │
+│  🐛  Pest Detection                    ← [NEW! ADDED]                       │
+│  🏪  Nearby Shops                                                           │
+│  🤖  ChatBot                                                                │
+│  📋  Govt Schemes & Documents                                               │
+│  🚨  Alerts                                                                 │
+│  ⚙️  Settings                                                               │
+│  👨‍💼  Admin Panel                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         PEST DETECTION PAGE LAYOUT                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  🐛 Plant Disease Detection                                           │ │
+│  │  Upload a photo of your plant leaf to detect diseases...             │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  ℹ️  How it works:                                                    │ │
+│  │  Our AI model analyzes leaf images to identify common plant diseases │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                     ┌─────────────────────┐                           │ │
+│  │                     │   📷 UPLOAD AREA    │                           │ │
+│  │                     │                     │                           │ │
+│  │                     │  [Image Preview]    │                           │ │
+│  │                     │                     │                           │ │
+│  │                     │ [Choose Image]      │                           │ │
+│  │                     │ [Analyze Image]     │                           │ │
+│  │                     └─────────────────────┘                           │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  ✅ Detection Complete                                                │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                  │ │
+│  │  │  Disease    │  │ Confidence  │  │ Image Type  │                  │ │
+│  │  │  Bacterial  │  │   98.76%    │  │ ✓ Leaf      │                  │ │
+│  │  │  Spot       │  │ ▓▓▓▓▓▓▓▓▓▓  │  │ Image       │                  │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘                  │ │
+│  │                                                                       │ │
+│  │  💡 Recommendations:                                                  │ │
+│  │  • Consult agricultural expert for treatment                         │ │
+│  │  • Remove affected leaves to prevent spread                          │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                       │
+│  │ 📤 Upload   │  │ 🌿 AI       │  │ 👁️ Get      │                       │
+│  │ Crop Image  │  │ Analysis    │  │ Results     │                       │
+│  └─────────────┘  └─────────────┘  └─────────────┘                       │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  🌿 Best Practices for Accurate Detection                            │ │
+│  │  • Good Lighting  • Clear Focus  • Single Leaf  • Multiple Angles    │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            DATA FLOW DIAGRAM                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [User]                                                                     │
+│    │                                                                         │
+│    ├─ Clicks "Pest Detection" in Sidebar                                   │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [PestDetection.jsx]                                                        │
+│    │                                                                         │
+│    ├─ User uploads image                                                    │
+│    ├─ Image converted to Base64                                             │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [pestService.js]                                                           │
+│    │                                                                         │
+│    ├─ POST /api/pest-detection                                              │
+│    │   { imageBase64: "data:image/jpeg;base64,..." }                        │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [Backend API]                                                              │
+│    │                                                                         │
+│    ├─ mlController.pestDetect()                                             │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [pythonRunner.js]                                                          │
+│    │                                                                         │
+│    ├─ Spawns Python process                                                 │
+│    ├─ Sends JSON via stdin                                                  │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [plant_disease.py]                                                         │
+│    │                                                                         │
+│    ├─ Decodes Base64 image                                                  │
+│    ├─ Loads HuggingFace model                                               │
+│    ├─ Runs inference                                                        │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [MobileNetV2 Model]                                                        │
+│    │                                                                         │
+│    ├─ Predicts disease class                                                │
+│    ├─ Calculates confidence                                                 │
+│    ├─ Checks if leaf image                                                  │
+│    │                                                                         │
+│    ▼                                                                         │
+│  {                                                                          │
+│    "label": "Tomato___Bacterial_spot",                                     │
+│    "confidence": 98.76,                                                     │
+│    "isLeaf": true,                                                          │
+│    "ok": true                                                               │
+│  }                                                                          │
+│    │                                                                         │
+│    ├─ Returns to Python script                                              │
+│    ├─ Outputs to stdout                                                     │
+│    ├─ Captured by pythonRunner                                              │
+│    ├─ Parsed as JSON                                                        │
+│    ├─ Sent to controller                                                    │
+│    ├─ Returned as HTTP response                                             │
+│    ├─ Received by pestService                                               │
+│    ├─ Updates React state                                                   │
+│    │                                                                         │
+│    ▼                                                                         │
+│  [UI displays results]                                                      │
+│    │                                                                         │
+│    ├─ Disease name card                                                     │
+│    ├─ Confidence percentage with bar                                        │
+│    ├─ Leaf verification status                                              │
+│    └─ Treatment recommendations                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              FILE STRUCTURE                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Frontend/                                                                  │
+│  ├── src/                                                                   │
+│  │   ├── components/                                                        │
+│  │   │   └── Sidebar.jsx              ← [MODIFIED] Added Pest Detection    │
+│  │   ├── pages/                                                             │
+│  │   │   └── PestDetection.jsx        ← [ENHANCED] New UI & ML integration │
+│  │   └── services/                                                          │
+│  │       └── pestService.js           ← [EXISTS] API service                │
+│  │                                                                           │
+│  Backend/                                                                   │
+│  ├── controllers/                                                           │
+│  │   └── mlController.js              ← [EXISTS] pestDetect function        │
+│  ├── routes/                                                                │
+│  │   └── ML.js                        ← [EXISTS] /pest-detection route     │
+│  ├── ml/                                                                    │
+│  │   └── plant_disease.py             ← [EXISTS] ML script                 │
+│  └── utils/                                                                 │
+│      └── pythonRunner.js              ← [EXISTS] Python executor            │
+│                                                                             │
+│  Documentation/                                                             │
+│  ├── PEST_DETECTION_GUIDE.md          ← [NEW] Feature guide                │
+│  ├── PEST_DETECTION_COMPLETE.md       ← [NEW] Integration summary          │
+│  ├── ML_INTEGRATION_GUIDE.md          ← [EXISTS] Technical docs            │
+│  ├── QUICKSTART.md                    ← [EXISTS] Setup guide               │
+│  └── TEST_DATA.md                     ← [EXISTS] Testing guide              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           TESTING CHECKLIST                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ✅  Sidebar shows "Pest Detection" with Bug icon                          │
+│  ✅  Clicking navigates to /pest-detection                                 │
+│  ✅  Page loads without errors                                             │
+│  ✅  Upload interface displays correctly                                   │
+│  ✅  Image can be selected and previewed                                   │
+│  ✅  Analyze button appears after upload                                   │
+│  ✅  Loading state shows during analysis                                   │
+│  ✅  Results display with disease name                                     │
+│  ✅  Confidence percentage shows with progress bar                         │
+│  ✅  Leaf verification status displays                                     │
+│  ✅  Recommendations show for diseased plants                              │
+│  ✅  Error messages display on failure                                     │
+│  ✅  Responsive design works on mobile                                     │
+│  ✅  Backend API responds correctly                                        │
+│  ✅  Python script executes successfully                                   │
+│  ✅  ML model loads and predicts                                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                          ✅ INTEGRATION COMPLETE                           ║
+║                                                                            ║
+║  The Pest Detection page is now fully integrated into the AgroSakha       ║
+║  application with ML model support. Users can access it from the sidebar  ║
+║  and use AI-powered disease detection on their plant leaf images.         ║
+║                                                                            ║
+║  Status: READY FOR USE! 🎉                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+```
